@@ -30,27 +30,29 @@ static const char *TAG = "application_main";
 
 EventGroupHandle_t event_group;
 
-static void print_sha256 (const uint8_t *image_hash, const char *label)
+static void print_sha256(const uint8_t *image_hash, const char *label)
 {
-    char hash_print[HASH_LEN * 2 + 1];
-    hash_print[HASH_LEN * 2] = 0;
-    for (int i = 0; i < HASH_LEN; ++i) {
-        sprintf(&hash_print[i * 2], "%02x", image_hash[i]);
-    }
-    ESP_LOGI(TAG, "%s: %s", label, hash_print);
+  char hash_print[HASH_LEN * 2 + 1];
+  hash_print[HASH_LEN * 2] = 0;
+  for (int i = 0; i < HASH_LEN; ++i)
+  {
+    sprintf(&hash_print[i * 2], "%02x", image_hash[i]);
+  }
+  ESP_LOGI(TAG, "%s: %s", label, hash_print);
 }
 
-void app_shutdown() {
+void app_shutdown()
+{
   app_settings_shutdown();
-  #ifdef CONFIG_USE_SSD1306_LCD_DRIVER
+#ifdef CONFIG_USE_SSD1306_LCD_DRIVER
   app_lcd_shutdown();
-  #endif
-  #ifdef CONFIG_LED_ILLUMINATOR_ENABLED
+#endif
+#ifdef CONFIG_LED_ILLUMINATOR_ENABLED
   app_illuminator_shutdown();
-  #endif
-  #ifdef CONFIG_MDNS_ENABLED
+#endif
+#ifdef CONFIG_MDNS_ENABLED
   mdns_free();
-  #endif
+#endif
   app_httpd_shutdown();
   app_wifi_shutdown();
   app_camera_shutdown();
@@ -58,20 +60,20 @@ void app_shutdown() {
 
 void app_main()
 {
-  uint8_t sha_256[HASH_LEN] = { 0 };
+  uint8_t sha_256[HASH_LEN] = {0};
   esp_partition_t partition;
 
   // get sha256 digest for the partition table
-  partition.address   = ESP_PARTITION_TABLE_OFFSET;
-  partition.size      = ESP_PARTITION_TABLE_MAX_LEN;
-  partition.type      = ESP_PARTITION_TYPE_DATA;
+  partition.address = ESP_PARTITION_TABLE_OFFSET;
+  partition.size = ESP_PARTITION_TABLE_MAX_LEN;
+  partition.type = ESP_PARTITION_TYPE_DATA;
   esp_partition_get_sha256(&partition, sha_256);
   print_sha256(sha_256, "SHA-256 for the partition table: ");
 
   // get sha256 digest for bootloader
-  partition.address   = ESP_BOOTLOADER_OFFSET;
-  partition.size      = ESP_PARTITION_TABLE_OFFSET;
-  partition.type      = ESP_PARTITION_TYPE_APP;
+  partition.address = ESP_BOOTLOADER_OFFSET;
+  partition.size = ESP_PARTITION_TABLE_OFFSET;
+  partition.type = ESP_PARTITION_TYPE_APP;
   esp_partition_get_sha256(&partition, sha_256);
   print_sha256(sha_256, "SHA-256 for bootloader: ");
 
@@ -85,15 +87,15 @@ void app_main()
 
   if (esp_ota_get_state_partition(running, &ota_state) == ESP_OK)
   {
-    if(ota_state == ESP_OTA_IMG_PENDING_VERIFY)
+    if (ota_state == ESP_OTA_IMG_PENDING_VERIFY)
     {
-        ESP_LOGI(TAG, "Update was successful, switching to run this going forward");
-        esp_err_t errRb = esp_ota_mark_app_valid_cancel_rollback();
+      ESP_LOGI(TAG, "Update was successful, switching to run this going forward");
+      esp_err_t errRb = esp_ota_mark_app_valid_cancel_rollback();
     }
     else
     {
-        ESP_LOGE(TAG, "Update was not sucessful, rolling back the firmware and rebooting");
-        esp_err_t errRb = esp_ota_mark_app_invalid_rollback_and_reboot();
+      ESP_LOGE(TAG, "Update was not sucessful, rolling back the firmware and rebooting");
+      esp_err_t errRb = esp_ota_mark_app_invalid_rollback_and_reboot();
     }
   }
 
@@ -106,41 +108,43 @@ void app_main()
   event_group = xEventGroupCreate();
 
   app_settings_startup();
-//  app_settings_reset();
-//  app_settings_save();
+  //  app_settings_reset();
+  //  app_settings_save();
 
   app_camera_startup();
-  #ifdef CONFIG_LED_ILLUMINATOR_ENABLED
-    app_illuminator_startup();
-  #endif
+#ifdef CONFIG_LED_ILLUMINATOR_ENABLED
+  app_illuminator_startup();
+#endif
   app_wifi_startup();
 
-  for (;;) {
-	  uxBits = xEventGroupWaitBits(event_group,WIFI_CONNECTED_BIT | WIFI_SOFTAP_BIT,pdFALSE,pdFALSE,500 / portTICK_PERIOD_MS);
+  for (;;)
+  {
+    uxBits = xEventGroupWaitBits(event_group, WIFI_CONNECTED_BIT | WIFI_SOFTAP_BIT, pdFALSE, pdFALSE, 500 / portTICK_PERIOD_MS);
 
-	  if (uxBits > 0) {
-      #ifdef CONFIG_SNTP_ENABLED
-        //app_sntp_startup();
-      #endif
+    if (uxBits > 0)
+    {
+#ifdef CONFIG_SNTP_ENABLED
+      //app_sntp_startup();
+#endif
 
-      #ifdef CONFIG_MDNS_ENABLED
-        ESP_ERROR_CHECK(mdns_init());
-        ESP_ERROR_CHECK(mdns_hostname_set(settings.hostname));
-        ESP_ERROR_CHECK(mdns_instance_name_set(settings.mdns_instance));
-        mdns_txt_item_t serviceTxtData[1] = { {"path","/"} };
-        ESP_ERROR_CHECK( mdns_service_add(settings.mdns_instance, "_http", "_tcp", 80, serviceTxtData, 1) );
-      #endif
+#ifdef CONFIG_MDNS_ENABLED
+      ESP_ERROR_CHECK(mdns_init());
+      ESP_ERROR_CHECK(mdns_hostname_set(settings.hostname));
+      ESP_ERROR_CHECK(mdns_instance_name_set(settings.mdns_instance));
+      mdns_txt_item_t serviceTxtData[1] = {{"path", "/"}};
+      ESP_ERROR_CHECK(mdns_service_add(settings.mdns_instance, "_http", "_tcp", 80, serviceTxtData, 1));
+#endif
 
       app_httpd_startup();
 
-      #ifdef CONFIG_USE_SSD1306_LCD_DRIVER
-        app_lcd_startup();
-      #endif
+#ifdef CONFIG_USE_SSD1306_LCD_DRIVER
+      app_lcd_startup();
+#endif
 
-      #ifdef CONFIG_OTA_ENABLED
-        //Startup the OTA process
-        ota_init();
-      #endif
+#ifdef CONFIG_OTA_ENABLED
+      //Startup the OTA process
+      ota_init();
+#endif
 
       return;
     }

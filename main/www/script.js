@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function(event) {
+document.addEventListener('DOMContentLoaded', function (event) {
     var baseHost = document.location.origin
     var streamUrl = baseHost + ':81'
 
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
             .then(response => {
                 console.log(`request to ${query} finished, status: ${response.status}`)
                 if (response.status == 200)
-                //Reload the page and ignore the browser cache.
+                    //Reload the page and ignore the browser cache.
                     window.location.reload(true);
             })
     }
@@ -84,10 +84,10 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
     function fetchSettings() {
         fetch(`${baseHost}/status`)
-            .then(function(response) {
+            .then(function (response) {
                 return response.json()
             })
-            .then(function(state) {
+            .then(function (state) {
                 document
                     .querySelectorAll('.default-action')
                     .forEach(el => {
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
             stopStream()
             hide(viewContainer)
             resetDefaults()
-                //rebootCamera()
+            //rebootCamera()
         }
     }
 

@@ -123,7 +123,7 @@ void ota_task(void *pvParameter)
             goto ota_end;
         }
 
-        if(bNeedUpdate)
+        if (bNeedUpdate)
         {
             ESP_LOGI(TAG, "Firmware update available, downloading now");
 
@@ -162,7 +162,7 @@ void ota_task(void *pvParameter)
                 ESP_LOGE(TAG, "Image validation failed, image is corrupted");
             }
 
-            if(bNeedUpdate)
+            if (bNeedUpdate)
             {
                 ESP_LOGE(TAG, "OTA upgrade failed %d", ota_finish_err);
             }
