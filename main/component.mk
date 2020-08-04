@@ -10,4 +10,4 @@ COMPONENT_EMBED_FILES := www/index.html.gz
 COMPONENT_EMBED_FILES += www/style.css.gz
 COMPONENT_EMBED_FILES += www/script.js.gz
 
-COMPONENT_EMBED_TXTFILES :=  ${PROJECT_PATH}/
+COMPONENT_EMBED_TXTFILES :=  ${PROJECT_PATH}/server_certs/ca.pem
