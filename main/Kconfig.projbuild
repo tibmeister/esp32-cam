@@ -1,4 +1,9 @@
 menu "OTA Configuration"
+    config OTA_ENABLED
+        bool "OTA Enabled"
+        default y
+        help
+            Should OTA be used
 
     config FIRMWARE_UPGRADE_URL
         string "Firmware Upgrade URL"

@@ -1,16 +1,20 @@
-set(COMPONENT_SRCS 
-    "app_main.c" 
-    "app_settings.c" 
+set(COMPONENT_SRCS
+    "app_main.c"
+    "app_settings.c"
     "app_illuminator.c"
-    "app_camera.c" 
-    "app_wifi.c"  
-    "app_fonts.c" 
-    "app_httpd.c" 
-    "app_lcd.c" 
+    "app_camera.c"
+    "app_wifi.c"
+    "app_fonts.c"
+    "app_httpd.c"
+    "app_lcd.c"
     "app_sntp.c"
+    "app_ota.c"
 )
 
-set(COMPONENT_ADD_INCLUDEDIRS "include" "fonts")
+set(COMPONENT_ADD_INCLUDEDIRS
+    "include"
+    "fonts"
+)
 
 set(COMPONENT_REQUIRES
     esp32-camera
