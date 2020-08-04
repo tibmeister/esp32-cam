@@ -11,6 +11,7 @@
 #include "app_camera.h"
 #include "app_httpd.h"
 #include "app_lcd.h"
+#include "app_ota.h"
 #ifdef CONFIG_MDNS_ENABLED
 #include "mdns.h"
 #endif
@@ -40,10 +41,10 @@ void app_main()
 {
   EventBits_t uxBits;
 
-  ESP_ERROR_CHECK(esp_event_loop_create_default());   
+  ESP_ERROR_CHECK(esp_event_loop_create_default());
   event_group = xEventGroupCreate();
-    
-  app_settings_startup();    
+
+  app_settings_startup();
 //  app_settings_reset();
 //  app_settings_save();
 
@@ -52,10 +53,10 @@ void app_main()
   app_illuminator_startup();
   #endif
   app_wifi_startup();
-  
+
   for (;;) {
 	  uxBits = xEventGroupWaitBits(event_group,WIFI_CONNECTED_BIT | WIFI_SOFTAP_BIT,pdFALSE,pdFALSE,500 / portTICK_PERIOD_MS);
-	  if (uxBits > 0) {	  
+	  if (uxBits > 0) {
       #ifdef CONFIG_SNTP_ENABLED
       //app_sntp_startup();
       #endif

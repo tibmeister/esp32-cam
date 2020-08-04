@@ -1,3 +1,35 @@
+menu "OTA Configuration"
+
+    config FIRMWARE_UPGRADE_URL
+        string "Firmware Upgrade URL"
+        default ""
+        help
+            URL of server which hosts the firmware image.
+
+    config FIRMWARE_UPGRADE_URL_FROM_STDIN
+        bool
+        default y if EXAMPLE_FIRMWARE_UPGRADE_URL = "FROM_STDIN"
+
+    config SKIP_COMMON_NAME_CHECK
+        bool "Skip server certificate CN fieldcheck"
+        default n
+        help
+            This allows you to skip the validation of OTA server certificate CN field.
+
+    config SKIP_VERSION_CHECK
+        bool "Skip firmware version check"
+        default n
+        help
+            This allows you to skip the firmware version check.
+
+    config OTA_RECV_TIMEOUT
+        int "OTA Receive Timeout"
+        default 5000
+        help
+            Maximum time for reception
+
+endmenu
+
 menu "Camera Web Server"
 
 menu "WiFi Settings"
@@ -12,7 +44,7 @@ config ESP_WIFI_PASSWORD
     default ""
     help
     WiFi Password if WEP/WPA/WPA2 or empty if Open.
-    
+
 config ESP_MAXIMUM_RETRY
     int "Maximum retry"
     default 5
@@ -82,7 +114,7 @@ menu "SNTP Configuration"
         default ""
         help
             For help see: https://www.gnu.org/software/libc/manual/html_node/TZ-Variable.html
-            
+
 endmenu
 
 menu "LED Illuminator"
@@ -113,9 +145,9 @@ choice LED_LEDC_SPEED_MODE
     bool "Select LEDC Timer Speed Mode"
     default LED_LEDC_LOW_SPEED_MODE
     help
-    Select a speed mode for the LEDC channel 
+    Select a speed mode for the LEDC channel
 
-config LED_LEDC_LOW_SPEED_MODE  
+config LED_LEDC_LOW_SPEED_MODE
     bool "LOW_SPEED_MODE"
 config LED_LEDC_HIGH_SPEED_MODE
     bool "HIGH_SPEED_MODE"
