@@ -12,6 +12,9 @@
 #include "app_httpd.h"
 #include "app_lcd.h"
 #include "app_ota.h"
+#include "esp_flash_partitions.h"
+#include "esp_partition.h"
+#include "esp_ota_ops.h"
 #ifdef CONFIG_MDNS_ENABLED
 #include "mdns.h"
 #endif
