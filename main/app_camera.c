@@ -15,7 +15,7 @@ void app_camera_reset_defaults()
   sensor_t *s = esp_camera_sensor_get();
   if (s != NULL)
   {
-    s->set_framesize(s, FRAMESIZE_CIF);
+    s->set_framesize(s, FRAMESIZE_UXGA);
     s->set_quality(s, 14);
     s->set_brightness(s, 0);
     s->set_contrast(s, 0);
@@ -68,8 +68,8 @@ void app_camera_startup()
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
-  config.frame_size = FRAMESIZE_SVGA;
-  config.jpeg_quality = 16;
+  config.frame_size = FRAMESIZE_UXGA;
+  config.jpeg_quality = 10;
   config.fb_count = 2;
 
   esp_err_t err = esp_camera_init(&config);
