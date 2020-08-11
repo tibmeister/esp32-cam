@@ -22,7 +22,7 @@
 //#include "app_sntp.h"
 #endif
 
-#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
+#define LOG_LOCAL_LEVEL ESP_LOG_INFO
 #include "esp_log.h"
 
 #define HASH_LEN 32 /* SHA-256 digest length */
