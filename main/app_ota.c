@@ -41,13 +41,13 @@ static esp_err_t validate_image_header(esp_app_desc_t *new_app_info)
 #ifndef CONFIG_SKIP_VERSION_CHECK
     if (memcmp(new_app_info->version, running_app_info.version, sizeof(new_app_info->version)) == 0)
     {
-        ESP_LOGW(TAG, "Current running version is the same as available server version. We will not continue the update.");
+        ESP_LOGI(TAG, "Current running version is the same as available server version. We will not continue the update.");
         bNeedUpdate = false;
 
         return ESP_FAIL;
     }
 #endif
-
+    ESP_LOGI(TAG, "New firmware version is: %s", new_app_info->version);
     bNeedUpdate = true;
     return ESP_OK;
 }
